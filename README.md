@@ -4,8 +4,11 @@ Vim plugin for sorting alphabetically the attributes of html-alike tags. It also
 ## Example
 
 Before:
+
         <TouchableOpacity z={1} onPress={() => onClick(id)} color="red" a={5} style={handleStyle()}>
+
 After:
+
         <TouchableOpacity a={ 5 } color="red" onPress={ () => onClick(id) } style={ handleStyle() } z={ 1 } >
 
 
