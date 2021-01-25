@@ -33,7 +33,7 @@ This plugin works in normal mode. To use it, place your cursor anywhere inside a
 
 ## Modification Of Default Mappings
 
-This is easier to explain with an example: Let's pretend you wanted to change the default mapping to '<Leader>h'. The way to accomplish this, is to add the following line to your vimrc:
+This is easier to explain with an example: Let's pretend you wanted to change the default mapping to '\<Leader\>h'. The way to accomplish this, is to add the following line to your vimrc:
 
         nmap <unique><Leader>h <Plug>TagattsortNMode
 
