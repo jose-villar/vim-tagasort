@@ -148,90 +148,81 @@ endfunction
 function! s:FormatTagNMode() abort
   let s:savedPos = getpos(".")
   let s:line = getline('.')
-  let s:res = s:GetCurrentTag()
+  let s:ans = s:GetCurrentTag()
   call setpos('.', s:savedPos)
 
-  if empty(s:res)
+  if empty(s:ans) || strchars(s:ans[0]) < 3
     return
   endif
 
-  let s:tag=s:res[0]
-  if strchars(s:tag) < 3
-    return
-  endif
-
-  let s:startIndex=s:res[1]
-  let s:endIndex=s:res[2]
-  let s:originalTag = s:res[0]
-
+  let s:tag = s:ans[0]
+  let s:originalTag = s:ans[0]
+  let s:startIndex = s:ans[1]
+  let s:endIndex = s:ans[2]
   let s:firstPart = strcharpart(s:line, 0, s:startIndex)
-  let s:secondPart = strcharpart(s:line, s:endIndex, len(s:line) - 1)
+  let s:lastPart = strcharpart(s:line, s:endIndex, len(s:line) - 1)
 
-  call setpos('.', s:savedPos)
-
-  execute 'normal! o'.s:tag
-  .s/ \s\+/ /ge
-  .s/>/ >/ge
-  .s/\/ >/\/>/ge
-  .s/\/>/ \/>/ge
-  .s/\s\+=/=/ge
-  .s/=\s\+/=/ge
   let s:savedReg=@"
   let s:savedRegType = getregtype('')
 
-  execute 'normal! 0"0d$'
+  execute 'normal! o'.s:tag
+  .s/\V \s\+/ /ge " Remove duplicated whitespaces
+  .s/\V>/ >/ge  " > =>  >
+  .s/\V\/ >/\/>/ge " / > => />
+  .s/\V\/>/ \/>/ge " /> =>  />
+  .s/\V\s\+=/=/ge "     = => =
+  .s/\V=\s\+/=/ge " =     => =
+  .s/\V{ /{/ge " {  => {
+  .s/\V }/}/ge "  } => }
+  .s/\V\s\+,/,/ge "    , => ,
+  .s/\V,\s+/,/ge " ,    => ,
+  .s/\V= >/=>/ge " = > => =>
+  .s/\V=> /=>/ge " =>  => =>
+  .s/\V =>/=>/ge "  => => =>
+
+  execute 'normal! 0d$'
   let s:tag=@"
   execute 'normal! dd'
-  call setreg('', s:savedReg, s:savedRegType)
-
-  "Shrink Curly Braces
-  let s:tag = substitute(s:tag, "{ ", "{", "ge")
-  let s:tag = substitute(s:tag, " }", "}", "ge")
-  let s:tag = substitute(s:tag, "\s\+,", ",", "ge")
-  let s:tag = substitute(s:tag, ", ", ",", "ge")
-  let s:tag = substitute(s:tag, "= >", "=>", "ge")
-  let s:tag = substitute(s:tag, "=> ", "=>", "ge")
-  let s:tag = substitute(s:tag, " =>", "=>", "ge")
-
-  let s:tag = substitute(s:tag, "/ >", "/>", "ge")
-  let s:tag = substitute(s:tag, "/  >", "/>", "ge")
-  let s:tag = substitute(s:tag, "/>", " />", "ge")
-
-  let s:tag = substitute(s:tag, " \s\+", " ", "ge")
-  let s:tag = substitute(s:tag, "\s\+=", "=", "ge")
-  let s:tag = substitute(s:tag, "=\s\+", "=", "ge")
 
   call setpos('.', s:savedPos)
   let s:tag = s:SortTag(s:tag)
 
-  "Expand curly braces
-  let s:tag = substitute(s:tag, "{", "{ ", "ge")
-  let s:tag = substitute(s:tag, "}", " }", "ge")
-  let s:tag = substitute(s:tag, "\s\+,", ",", "ge")
-  let s:tag = substitute(s:tag, ",", ", ", "ge")
-  let s:tag = substitute(s:tag, "=>", " => ", "ge")
-  let s:tag = substitute(s:tag, "{ {", "{{", "ge")
-  let s:tag = substitute(s:tag, "} }", "}}", "ge")
-  let s:tag = trim(s:tag)
+  execute 'normal! o'.s:tag
+  .s/\V{/{ /ge " { => {\s
+  .s/\V}/ }/ge " } => \s}
+  .s/\V\s\+,/,/ge "    , => ,
+  .s/\V,/, /ge " , => ,\s
+  .s/\V=>/ => /ge " => => \s=>\s
+  .s/\V{ {/{{/ge " { { => {{
+  .s/\V} }/}}/ge " } } => }}
+  .s/\V(/( /ge " ( => (\s
+  .s/\V)/ )/ge " ) => \s)
+  .s/\V \s\+/ /ge " Remove duplicated whitespaces
+  .s/\V( )/()/ge " ( ) => ()
+  .s/\V\s>/>/ge " \s> => >
 
-  let s:finalResult = s:firstPart.s:tag.s:secondPart
-  let s:finalResult = substitute(s:finalResult, "><", "> <", "ge")
+  execute 'normal! 0d$'
+  let s:tag=@"
+  execute 'normal! dd'
+  call setpos('.', s:savedPos)
+
+  let s:tag = trim(s:tag)
+  let s:finalResult = s:firstPart.s:tag.s:lastPart
 
   call setline('.', s:finalResult)
+  normal! ==
   call setpos('.', s:savedPos)
-  .s/ \s\+/ /ge
-  normal!==
-  call setpos('.', s:savedPos)
-  unlet s:tag
-  unlet s:finalResult
-  unlet s:savedPos
-  unlet s:res
-  unlet s:firstPart
-  unlet s:secondPart
-  unlet s:startIndex
-  unlet s:endIndex
-  unlet s:line
-  unlet s:originalTag
+  call setreg('', s:savedReg, s:savedRegType)
+  unlet! s:tag
+  unlet! s:finalResult
+  unlet! s:savedPos
+  unlet! s:ans
+  unlet! s:firstPart
+  unlet! s:lastPart
+  unlet! s:startIndex
+  unlet! s:endIndex
+  unlet! s:line
+  unlet! s:originalTag
 endfunction
 "" ------------------------------------------------------------------------------
 let &cpo= s:keepcpo
