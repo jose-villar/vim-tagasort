@@ -1,6 +1,6 @@
 " Tagattsort - Tags' attributes sorter
 " Author:  José Villar
-" Version: 0.1
+" Version: 0.2
 " ------------------------------------------------------------------------------
 
 " Exit when app has already been loaded, or "compatible" mode is set, or vim
@@ -145,6 +145,69 @@ function! s:SortTag(tag) abort
   unlet s:closeTag
 endfunction
 
+function! s:PreFormatTagForSorting(tag, savedPos)
+  let s:savedReg=@"
+  let s:savedRegType = getregtype('')
+  let s:tag = a:tag
+
+  execute 'normal! o'.a:tag
+  .s/\V \s\+/ /ge " Remove duplicated whitespaces
+  .s/\V>/ >/ge  " > =>  >
+  .s/\V\/ >/\/>/ge " / > => />
+  .s/\V\/>/ \/>/ge " /> =>  />
+  .s/\V\s\+=/=/ge "     = => =
+  .s/\V=\s\+/=/ge " =     => =
+  .s/\V{ /{/ge " {  => {
+  .s/\V }/}/ge "  } => }
+  .s/\V\s\+,/,/ge "    , => ,
+  .s/\V,\s+/,/ge " ,    => ,
+  .s/\V= >/=>/ge " = > => =>
+  .s/\V=> /=>/ge " =>  => =>
+  .s/\V =>/=>/ge "  => => =>
+  .s/\V( /(/ge " (\s => (
+  .s/\V )/)/ge " \s) => )
+
+  execute 'normal! 0d$'
+  let s:tag=@"
+  execute 'normal! dd'
+
+  call setreg('', s:savedReg, s:savedRegType)
+  call setpos('.', a:savedPos)
+  unlet s:savedReg
+  unlet s:savedRegType
+  return s:tag
+endfunction
+
+function! s:PostFormatTag(tag, savedPos)
+  let s:savedReg=@"
+  let s:savedRegType = getregtype('')
+  let s:tag = a:tag
+
+  execute 'normal! o'.a:tag
+  .s/\V{/{ /ge " { => {\s
+  .s/\V}/ }/ge " } => \s}
+  .s/\V\s\+,/,/ge "    , => ,
+  .s/\V,/, /ge " , => ,\s
+  .s/\V=>/ => /ge " => => \s=>\s
+  .s/\V{ {/{{/ge " { { => {{
+  .s/\V} }/}}/ge " } } => }}
+  .s/\V(/( /ge " ( => (\s
+  .s/\V)/ )/ge " ) => \s)
+  .s/\V \s\+/ /ge " Remove duplicated whitespaces
+  .s/\V( )/()/ge " ( ) => ()
+  .s/\V\s>/>/ge " \s> => >
+
+  execute 'normal! 0d$'
+  let s:tag=@"
+  execute 'normal! dd'
+
+  call setreg('', s:savedReg, s:savedRegType)
+  call setpos('.', a:savedPos)
+  unlet s:savedReg
+  unlet s:savedRegType
+  return s:tag
+endfunction
+
 function! s:FormatTagNMode() abort
   let s:savedPos = getpos(".")
   let s:line = getline('.')
@@ -162,49 +225,9 @@ function! s:FormatTagNMode() abort
   let s:firstPart = strcharpart(s:line, 0, s:startIndex)
   let s:lastPart = strcharpart(s:line, s:endIndex, len(s:line) - 1)
 
-  let s:savedReg=@"
-  let s:savedRegType = getregtype('')
-
-  execute 'normal! o'.s:tag
-  .s/\V \s\+/ /ge " Remove duplicated whitespaces
-  .s/\V>/ >/ge  " > =>  >
-  .s/\V\/ >/\/>/ge " / > => />
-  .s/\V\/>/ \/>/ge " /> =>  />
-  .s/\V\s\+=/=/ge "     = => =
-  .s/\V=\s\+/=/ge " =     => =
-  .s/\V{ /{/ge " {  => {
-  .s/\V }/}/ge "  } => }
-  .s/\V\s\+,/,/ge "    , => ,
-  .s/\V,\s+/,/ge " ,    => ,
-  .s/\V= >/=>/ge " = > => =>
-  .s/\V=> /=>/ge " =>  => =>
-  .s/\V =>/=>/ge "  => => =>
-
-  execute 'normal! 0d$'
-  let s:tag=@"
-  execute 'normal! dd'
-
-  call setpos('.', s:savedPos)
+  let s:tag = s:PreFormatTagForSorting(s:tag, s:savedPos)
   let s:tag = s:SortTag(s:tag)
-
-  execute 'normal! o'.s:tag
-  .s/\V{/{ /ge " { => {\s
-  .s/\V}/ }/ge " } => \s}
-  .s/\V\s\+,/,/ge "    , => ,
-  .s/\V,/, /ge " , => ,\s
-  .s/\V=>/ => /ge " => => \s=>\s
-  .s/\V{ {/{{/ge " { { => {{
-  .s/\V} }/}}/ge " } } => }}
-  .s/\V(/( /ge " ( => (\s
-  .s/\V)/ )/ge " ) => \s)
-  .s/\V \s\+/ /ge " Remove duplicated whitespaces
-  .s/\V( )/()/ge " ( ) => ()
-  .s/\V\s>/>/ge " \s> => >
-
-  execute 'normal! 0d$'
-  let s:tag=@"
-  execute 'normal! dd'
-  call setpos('.', s:savedPos)
+  let s:tag = s:PostFormatTag(s:tag, s:savedPos)
 
   let s:tag = trim(s:tag)
   let s:finalResult = s:firstPart.s:tag.s:lastPart
@@ -212,7 +235,6 @@ function! s:FormatTagNMode() abort
   call setline('.', s:finalResult)
   normal! ==
   call setpos('.', s:savedPos)
-  call setreg('', s:savedReg, s:savedRegType)
   unlet! s:tag
   unlet! s:finalResult
   unlet! s:savedPos
@@ -224,9 +246,7 @@ function! s:FormatTagNMode() abort
   unlet! s:line
   unlet! s:originalTag
 endfunction
+
 "" ------------------------------------------------------------------------------
 let &cpo= s:keepcpo
 unlet s:keepcpo
-
-
-
