@@ -36,7 +36,7 @@ function! s:FindNextClosingTag() abort
   let s:prevCh = s:CharAt(s:pos[2] - 2, s:line)
   let s:prevPos = getpos('.')
 
-  while( s:ch != '>' && getline('.') == s:line)
+  while( s:ch != '>' )
     normal! f>
     if getpos('.') == s:prevPos
       return [-1,-1,-1,-1]
@@ -44,9 +44,9 @@ function! s:FindNextClosingTag() abort
     let s:pos = getpos('.')
     let s:ch = s:CharAt(s:pos[2] - 1, s:line)
     let s:prevCh = s:CharAt(s:pos[2] - 2, s:line)
-    while (s:prevCh == '=' && getline('.') == s:line )
+    while (s:prevCh == '=')
       normal! f>
-      if getpos('.') == s:prevPos
+      if getpos('.') == s:pos
         return [-1,-1,-1,-1]
       endif
       let s:pos = getpos('.')
@@ -82,14 +82,29 @@ function! s:GetCurrentTag() abort
   elseif s:charAtCursor == '>'
     let s:endIndex = s:originalPosColNumber
     normal! F<
-    let s:startIndex = getpos('.')[2]
+    if s:CharAt(getpos('.')[2] - 1, getline('.')) == '>'
+      return
+    else
+      let s:startIndex = getpos('.')[2]
+    endif
+
+    if s:endIndex != s:FindNextClosingTag()[2]
+      return
+    endif
+
   else
     let s:endIndex = s:FindNextClosingTag()[2]
+
     if s:endIndex == -1
       return
     endif
     normal! F<
     let s:startIndex = getpos('.')[2]
+
+    if s:endIndex == s:startIndex
+      return
+    endif
+
   endif
 
   if s:line != getline('.')
