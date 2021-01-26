@@ -126,13 +126,16 @@ function! s:FormatTagNMode() abort
   let s:line = getline('.')
   let s:res = s:GetCurrentTag()
   call setpos('.', s:savedPos)
+
   if empty(s:res)
     return
   endif
+
   let s:tag=s:res[0]
   if strchars(s:tag) < 3
     return
   endif
+
   let s:startIndex=s:res[1]
   let s:endIndex=s:res[2]
   let s:originalTag = s:res[0]
@@ -140,11 +143,22 @@ function! s:FormatTagNMode() abort
   let s:firstPart = strcharpart(s:line, 0, s:startIndex)
   let s:secondPart = strcharpart(s:line, s:endIndex, len(s:line) - 1)
 
-  .s/ \s\+/ /ge
   call setpos('.', s:savedPos)
-  let s:tag = substitute(s:tag, ">", " >", "ge")
-  let s:tag = substitute(s:tag, "/ >", "/>", "ge")
-  let s:tag = substitute(s:tag, "/>", " />", "ge")
+
+  execute 'normal! o'.s:tag
+  .s/ \s\+/ /ge
+  .s/>/ >/ge
+  .s/\/ >/\/>/ge
+  .s/\/>/ \/>/ge
+  .s/\s\+=/=/ge
+  .s/=\s\+/=/ge
+  let s:savedReg=@"
+  let s:savedRegType = getregtype('')
+
+  execute 'normal! 0"0d$'
+  let s:tag=@"
+  execute 'normal! dd'
+  call setreg('', s:savedReg, s:savedRegType)
 
   "Shrink Curly Braces
   let s:tag = substitute(s:tag, "{ ", "{", "ge")
@@ -159,6 +173,11 @@ function! s:FormatTagNMode() abort
   let s:tag = substitute(s:tag, "/  >", "/>", "ge")
   let s:tag = substitute(s:tag, "/>", " />", "ge")
 
+  let s:tag = substitute(s:tag, " \s\+", " ", "ge")
+  let s:tag = substitute(s:tag, "\s\+=", "=", "ge")
+  let s:tag = substitute(s:tag, "=\s\+", "=", "ge")
+
+  call setpos('.', s:savedPos)
   let s:tag = s:SortTag(s:tag)
 
   "Expand curly braces
