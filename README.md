@@ -7,7 +7,7 @@ The following example shows a tag before and after using the plugin.
 
 Before:
 
-        <Box z={ 1   } color="red" onPress={ () => onClick( id ) } style={ handleStyle() }  a={ 5 } >
+        <Box z={ 1   } color="red" onPress={()=>onClick(id )} style={ handleStyle(  ) }  a={ 5 } >
 
 After:
 
