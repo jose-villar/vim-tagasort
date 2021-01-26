@@ -40,4 +40,4 @@ This is easier to explain with an example: Let's pretend you wanted to change th
 ## Limitations
 
 - The plugin won't work for tags whose attributes are spread across multiple lines.
-- In case of the plugin getting stuck in an infinite loop, you can always cancel its execution by pressing '\<C-c\>' (CTRL-C)
+- In case of the plugin getting stuck in an infinite loop, you can always cancel its execution by pressing '\<C-c\>' (Ctrl+c)
