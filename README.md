@@ -1,5 +1,6 @@
-# vim-tagattsort (tag attributes sorter)
-Vim plugin for alphabetically sorting attributes of tags (html, jsx, etc). It also enhances their format to improve readability.
+# vim-tagattsort
+
+This plugin is a tag attributes sorter. It sorts the attributes of html and jsx tags alphabetically. It also enhances their format to improve readability.
 
 ## Example
 
@@ -15,7 +16,7 @@ After:
 
 ## Usage
 
-The plugin works in normal mode. To use it, place your cursor anywhere inside a tag and then hit the spacebar twice. It also works if you place the cursor at the beginning of a line; in this case, the target would be the left-most tag in that line.
+The plugin works in normal mode. To use it, place your cursor anywhere inside a tag and then hit the spacebar twice. It also works if you place the cursor at the beginning of a line; in this case, the target is the left-most tag in that line.
 
 ## Installation
 
@@ -32,10 +33,10 @@ The plugin works in normal mode. To use it, place your cursor anywhere inside a 
 
 ## Modification of Default Mappings
 
-This is easier to explain with an example: Let's pretend you wanted to change the default mapping to '\<Leader\>h'. The way to accomplish this, is to add the following line to your *vimrc*:
+You can easily change the key combination that triggers the plugin. For example, if you wanted to change the default mapping to `<Leader>h` , you would have to add the following line to your *vimrc*:
 
         nmap <unique><Leader>h <Plug>TagattsortNMode
 
 ## Limitations
 
-- The plugin won't work for tags whose attributes are spread across multiple lines.
+- The plugin doesn't work with tags whose attributes are spread across multiple lines.

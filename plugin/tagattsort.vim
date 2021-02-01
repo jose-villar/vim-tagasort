@@ -1,4 +1,4 @@
-" Tagattsort - Tags' attributes sorter
+" Tagattsort - Tag attributes sorter
 " Author:  José Villar
 " Version: 0.2
 " ------------------------------------------------------------------------------
