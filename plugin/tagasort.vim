@@ -7,20 +7,20 @@
 
 " Exit when app has already been loaded, or "compatible" mode is set, or vim
 " version is lower than 700
-if exists("g:loaded_Tagattsort") || &cp || v:version < 700
+if exists("g:loaded_Tagasort") || &cp || v:version < 700
   finish
 endif
 
-let g:loaded_Tagattsort = 1
-let s:keepcpo           = &cpo
+let g:loaded_Tagasort = 1
+let s:keepcpo = &cpo
 set cpo&vim
 
-if !hasmapto('<Plug>TagattsortNMode')
-  nmap <unique><Space><Space> <Plug>TagattsortNMode
+if !hasmapto('<Plug>Tagasort')
+  nmap <unique><Space><Space> <Plug>Tagasort
 endif
 
-noremap <silent> <unique> <script> <Plug>TagattsortNMode
- \ :set lz<CR>:call <SID>FormatTagNMode()<CR>:set nolz<CR>
+noremap <silent> <unique> <script> <Plug>Tagasort
+ \ :set lz<CR>:call <SID>FormatTag()<CR>:set nolz<CR>
 
 " ------------------------------------------------------------------------------
 
@@ -210,7 +210,7 @@ function! s:PostFormatTag(tag, savedPos)
   return s:tag
 endfunction
 
-function! s:FormatTagNMode() abort
+function! s:FormatTag() abort
   let s:savedPos = getpos(".")
   let s:line = getline('.')
   let s:ans = s:GetCurrentTag()
