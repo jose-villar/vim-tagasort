@@ -1,4 +1,5 @@
-# vim-tagattsort
+# vim-tagasort
+
 
 This plugin is a tag attributes sorter. It sorts the attributes of html and jsx tags alphabetically. Also, it enhances their format to improve readability.
 

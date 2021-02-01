@@ -1,5 +1,7 @@
-" Tagattsort - Tag attributes sorter
-" Author:  José Villar
+" Tagasort - Tag attributes sorter
+" Vim plugin for sorting and formatting the attributes of html, js and jsx tags
+" Maintainer:  José Villar
+" Last Change: 2021 Feb 1
 " Version: 0.2
 " ------------------------------------------------------------------------------
 
