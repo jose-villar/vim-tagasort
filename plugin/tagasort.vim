@@ -1,25 +1,25 @@
-" Tagasort - Tag attributes sorter
-" Vim plugin for sorting and formatting the attributes of html, js and jsx tags
+" Tagasort - Tags attributes sorter
+" Vim plugin for sorting and formatting the attributes of html and jsx tags
 " Maintainer:  José Villar
-" Last Change: 2021 Feb 1
-" Version: 0.2
+" Last Change: 2021 Feb 2
+" Version: 0.3
 " ------------------------------------------------------------------------------
 
 " Exit when app has already been loaded, or "compatible" mode is set, or vim
 " version is lower than 700
-if exists("g:loaded_Tagasort") || &cp || v:version < 700
+if exists("g:loaded_tagasort") || &cp || v:version < 700
   finish
 endif
 
-let g:loaded_Tagasort = 1
+let g:loaded_tagasort = 1
 let s:keepcpo = &cpo
 set cpo&vim
 
-if !hasmapto('<Plug>Tagasort')
-  nmap <unique><Space><Space> <Plug>Tagasort
+if !hasmapto('<Plug>Tagasort_FormatTag')
+  nmap <unique><Space><Space> <Plug>Tagasort_FormatTag
 endif
 
-noremap <silent> <unique> <script> <Plug>Tagasort
+noremap <silent> <unique> <script> <Plug>Tagasort_FormatTag
  \ :set lz<CR>:call <SID>FormatTag()<CR>:set nolz<CR>
 
 " ------------------------------------------------------------------------------
@@ -31,8 +31,8 @@ function! s:CharAt(index, str) abort
   return nr2char(strgetchar(a:str, a:index))
 endfunction
 
-function! s:CursorDidMove(prevPos) abort
-  if getpos('.') != a:prevPos
+function! s:CursorDidMove() abort
+  if getpos('.') != s:prevPos
     return 1
   else
     return 0
@@ -40,24 +40,20 @@ function! s:CursorDidMove(prevPos) abort
 endfunction
 
 function! s:FoundValidClosingTag() abort
-  let s:pos = getpos('.')
+  let s:colNum = col('.')
   let s:line = getline('.')
-  let s:ch = s:CharAt(s:pos[2] - 1, s:line)
-  let s:prevCh = s:CharAt(s:pos[2] - 2, s:line)
-  return( s:ch == '>' && s:prevCh != '=' )
-  unlet s:pos
-  unlet s:line
-  unlet s:ch
-  unlet s:prevCh
+  let ch = s:CharAt(s:colNum - 1, s:line)
+  let prevCh = s:CharAt(s:colNum - 2, s:line)
+  return( ch == '>' && prevCh != '=' )
 endfunction
 
 function! s:FindNextClosingTag() abort
   let s:line = getline('.')
 
-  while !s:FoundValidClosingTag()
+  while ! s:FoundValidClosingTag()
     let s:prevPos = getpos('.')
     normal! f>
-    if !s:CursorDidMove(s:prevPos)
+    if ! s:CursorDidMove()
       return [-1, -1, -1, -1]
     endif
   endwhile
@@ -68,91 +64,32 @@ endfunction
 " Returns the tag found where the cursor is located, and its position in the
 " current line
 function! s:GetCurrentTag() abort
-  let s:line = getline('.')
-  let s:originalPos = getpos('.')
-  let s:originalPosLineNumber = s:originalPos[1]
-  let s:originalPosColNumber = s:originalPos[2]
-  let s:charAtCursor = s:CharAt(s:originalPosColNumber - 1, s:line)
+  let endIndex = s:FindNextClosingTag()[2]
+  if endIndex == -1 | return | endif
 
-  if s:charAtCursor == '<'
-    let s:startIndex = s:originalPosColNumber
-    let s:endIndex = s:FindNextClosingTag()[2]
+  let s:prevPos = getpos('.')
+  normal! F<
+  if ! s:CursorDidMove() | return | endif
 
-    if s:endIndex == -1
-      return
-    endif
-
-  elseif s:charAtCursor == '>'
-    if !s:FoundValidClosingTag()
-      while !s:FoundValidClosingTag()
-        let s:endIndex = s:FindNextClosingTag()
-        if s:endIndex == -1
-          return
-        endif
-      endwhile
-    else
-      let s:endIndex = s:originalPosColNumber
-    endif
-
-    let s:currentPos = getpos('.')
-    normal! F<
-    if !s:CursorDidMove(s:currentPos)
-      return
-    else
-      let s:startIndex = getpos('.')[2]
-    endif
-
-  else
-    let s:endIndex = s:FindNextClosingTag()[2]
-
-    if s:endIndex == -1
-      return
-    endif
-
-    let s:currentPos = getpos('.')
-    normal! F<
-    if !s:CursorDidMove(s:currentPos)
-      return
-    else
-      let s:startIndex = getpos('.')[2]
-    endif
-
-  endif
-
-  let s:tag = s:line[s:startIndex - 1 : s:endIndex - 1]
+  let startIndex = col('.')
+  let s:content = s:line[startIndex - 1 : endIndex - 1]
 
   call setpos('.', s:originalPos)
-  return [s:tag, s:startIndex - 1, s:endIndex]
-  unlet! s:line
-  unlet! s:currentPos
-  unlet! s:originalPos
-  unlet! s:originalPosLineNumber
-  unlet! s:originalPosColNumber
-  unlet! s:charAtCursor
-  unlet! s:startIndex
-  unlet! s:endIndex
-  unlet! s:tag
+  return [s:content, startIndex - 1, endIndex]
 endfunction
 
-function! s:SortTag(tag) abort
-  let s:tagAsList = split(a:tag, ' ')
-  let s:openTag = remove(s:tagAsList, 0)
-  let s:closeTag = remove(s:tagAsList, len(s:tagAsList) - 1)
-  call sort(s:tagAsList)
-  call add(s:tagAsList, s:closeTag)
-  call insert(s:tagAsList, s:openTag, 0)
-  return join(s:tagAsList)
-  unlet s:tagAsList
-  unlet s:openTag
-  unlet s:closeTag
+function! s:SortTag() abort
+  let tagAsList = split(s:content, ' ')
+  let openTag = remove(tagAsList, 0)
+  let closeTag = remove(tagAsList, len(tagAsList) - 1)
+  call sort(tagAsList)
+  call add(tagAsList, closeTag)
+  call insert(tagAsList, openTag, 0)
+  return join(tagAsList)
 endfunction
 
-function! s:PreFormatTagForSorting(tag, savedPos)
-  let s:savedReg=@"
-  let s:savedRegType = getregtype('')
-  let s:tag = a:tag
-
-  execute 'normal! o'.a:tag
+function! s:PreFormatTagForSorting()
+  execute 'normal! o'.s:content
   .s/\V \s\+/ /ge " Remove duplicated whitespaces
   .s/\V>/ >/ge  " > =>  >
   .s/\V\/ >/\/>/ge " / > => />
@@ -168,24 +105,15 @@ function! s:PreFormatTagForSorting(tag, savedPos)
   .s/\V =>/=>/ge "  => => =>
   .s/\V( /(/ge " (\s => (
   .s/\V )/)/ge " \s) => )
-
   execute 'normal! 0d$'
-  let s:tag=@"
+  let s:content = @"
   execute 'normal! dd'
-
-  call setreg('', s:savedReg, s:savedRegType)
-  call setpos('.', a:savedPos)
-  unlet s:savedReg
-  unlet s:savedRegType
-  return s:tag
+  call setpos('.', s:originalPos)
 endfunction
 
-function! s:PostFormatTag(tag, savedPos)
-  let s:savedReg=@"
-  let s:savedRegType = getregtype('')
-  let s:tag = a:tag
+function! s:PostFormatTag()
+  execute 'normal! o'.s:content
 
-  execute 'normal! o'.a:tag
   .s/\V{/{ /ge " { => {\s
   .s/\V}/ }/ge " } => \s}
   .s/\V\s\+,/,/ge "    , => ,
@@ -200,53 +128,56 @@ function! s:PostFormatTag(tag, savedPos)
   .s/\V\s>/>/ge " \s> => >
 
   execute 'normal! 0d$'
-  let s:tag=@"
+  let s:content = @"
   execute 'normal! dd'
 
-  call setreg('', s:savedReg, s:savedRegType)
-  call setpos('.', a:savedPos)
-  unlet s:savedReg
-  unlet s:savedRegType
-  return s:tag
+  call setpos('.', s:originalPos)
+endfunction
+
+function! s:CleanUpVars()
+  unlet s:colNum
+  unlet s:line
+  unlet s:prevPos
+  unlet s:originalPos
+  unlet s:originalPosLineNumber
+  unlet s:originalPosColNumber
+  unlet s:currentPos
+  unlet s:content
 endfunction
 
 function! s:FormatTag() abort
-  let s:savedPos = getpos(".")
+  let s:colNum = col('.')
   let s:line = getline('.')
-  let s:ans = s:GetCurrentTag()
-  call setpos('.', s:savedPos)
+  let s:prevPos = getpos('.')
+  let s:originalPos = getpos('.')
+  let s:originalPosLineNumber = line('.')
+  let s:originalPosColNumber = col('.')
+  let s:currentPos = getpos('.')
+  let savedReg = @"
+  let savedRegType = getregtype('')
+  let ans = s:GetCurrentTag()
 
-  if empty(s:ans) || strchars(s:ans[0]) < 3
-    return
-  endif
+  if empty(ans) || strchars(ans[0]) < 3 | return | endif
 
-  let s:tag = s:ans[0]
-  let s:originalTag = s:ans[0]
-  let s:startIndex = s:ans[1]
-  let s:endIndex = s:ans[2]
-  let s:firstPart = strcharpart(s:line, 0, s:startIndex)
-  let s:lastPart = strcharpart(s:line, s:endIndex, len(s:line) - 1)
+  let s:content = ans[0]
+  let startIndex = ans[1]
+  let endIndex = ans[2]
+  let firstPart = strcharpart(s:line, 0, startIndex)
+  let lastPart = strcharpart(s:line, endIndex, len(s:line) - 1)
 
-  let s:tag = s:PreFormatTagForSorting(s:tag, s:savedPos)
-  let s:tag = s:SortTag(s:tag)
-  let s:tag = s:PostFormatTag(s:tag, s:savedPos)
+  call s:PreFormatTagForSorting()
+  call s:SortTag()
+  call s:PostFormatTag()
 
-  let s:tag = trim(s:tag)
-  let s:finalResult = s:firstPart.s:tag.s:lastPart
+  let s:content = trim(s:content)
+  let finalResult = firstPart.s:content.lastPart
 
-  call setline('.', s:finalResult)
+  call setline('.', finalResult)
   normal! ==
-  call setpos('.', s:savedPos)
-  unlet! s:tag
-  unlet! s:finalResult
-  unlet! s:savedPos
-  unlet! s:ans
-  unlet! s:firstPart
-  unlet! s:lastPart
-  unlet! s:startIndex
-  unlet! s:endIndex
-  unlet! s:line
-  unlet! s:originalTag
+  call setpos('.', s:originalPos)
+  call setreg('', savedReg, savedRegType)
+
+  call s:CleanUpVars()
 endfunction
 
 "" ------------------------------------------------------------------------------
