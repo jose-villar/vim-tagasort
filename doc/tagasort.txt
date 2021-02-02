@@ -1,0 +1,54 @@
+*tagasort.txt* Sort and format the attributes of html and jsx tags.
+
+TABLE OF CONTENTS                                               *tagasort-toc*
+
+1. Purpose                                                  |tagasort-purpose|
+2. Usage                                                      |tagasort-usage|
+3. Example                                                  |tagasort-example|
+4. Mappings                                                |tagasort-mappings|
+5. Limitations                                          |tagasort-limitations|
+
+============================================================================
+PURPOSE                                                     *tagasort-purpose*
+
+The idea of this plugin is to improve readability of tags' attributes. To do
+so, the attributes are sorted alphabetically and formatted to enforce a
+consisted style.
+
+============================================================================
+USAGE                                                         *tagasort-usage*
+
+Tagasort works in normal mode. To use it, place your cursor anywhere
+inside a tag and then hit the spacebar twice. It also works if you place the
+cursor at the beginning of a line, before any tag; in this case, the target
+is the left-most tag in that line.
+
+============================================================================
+EXAMPLE                                                     *tagasort-example*
+
+The following case shows a tag before and after using the plugin.
+
+Before:
+>
+    <Box z={ 1   } color="red" onPress={()=>onClick(id )} a={5 } >
+<
+After:
+>
+    <Box a={ 5 } color="red" onPress={ () => onClick( id ) } z={ 1 }>
+<
+============================================================================
+MAPPINGS                                                   *tagasort-mappings*
+
+You can easily change the key combination that triggers the plugin. For
+example, if you wanted to change the default mapping to `<Leader>h`, you would
+have to add the following line to your vimrc:
+>
+    nmap <unique><Leader>h <Plug>Tagasort_FormatTag
+<
+============================================================================
+LIMITATIONS                                             *tagasort-limitations*
+
+Note that this plugin doesn't work with tags whose attributes are spread
+across multiple lines.
+
+============================================================================
