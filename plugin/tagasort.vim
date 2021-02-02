@@ -85,7 +85,7 @@ function! s:SortTag() abort
   call sort(tagAsList)
   call add(tagAsList, closeTag)
   call insert(tagAsList, openTag, 0)
-  return join(tagAsList)
+  let s:content = join(tagAsList)
 endfunction
 
 function! s:PreFormatTagForSorting()
