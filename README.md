@@ -40,4 +40,8 @@ You can easily change the key combination that triggers the plugin. For example,
 
 ## Limitations
 
-- This plugin doesn't work with tags whose attributes are spread across multiple lines.
+This plugin doesn't work with tags whose attributes are spread across multiple lines.
+
+## License
+
+Copyright (c) José Villar. Distributed under the same terms as Vim itself. See ``:help license``.
