@@ -1,19 +1,27 @@
 *tagasort.txt* Sort and format the attributes of html and jsx tags.
 
+Author:      José Villar <8.villar.dev at gmail.com>
+Last Change: 2021 Feb 2
+License:     Same terms as Vim itself (see |license|)
+Version:     1.0
+
 TABLE OF CONTENTS                                               *tagasort-toc*
 
-1. Purpose                                                  |tagasort-purpose|
+1. Introduction                                               |tagasort-intro|
 2. Usage                                                      |tagasort-usage|
 3. Example                                                  |tagasort-example|
 4. Mappings                                                |tagasort-mappings|
 5. Limitations                                          |tagasort-limitations|
 
 ============================================================================
-PURPOSE                                                     *tagasort-purpose*
+INTRODUCTION                                                  *tagasort-intro*
 
-The idea of this plugin is to improve readability of tags' attributes. To do
-so, the attributes are sorted alphabetically and formatted to enforce a
-consisted style.
+The idea of Tagasort is to improve the readability of attributes of html and
+jsx tags. To do so, the attributes are sorted alphabetically and formatted to
+enforce a consisted style.
+
+Note that this plugin was designed with Vim's autoload functionality
+(available since Vim 7) to keep your vim startup time low.
 
 ============================================================================
 USAGE                                                         *tagasort-usage*
@@ -21,7 +29,7 @@ USAGE                                                         *tagasort-usage*
 Tagasort works in normal mode. To use it, place your cursor anywhere
 inside a tag and then hit the spacebar twice. It also works if you place the
 cursor at the beginning of a line, before any tag; in this case, the target
-is the left-most tag in that line.
+is the first tag found in that line.
 
 ============================================================================
 EXAMPLE                                                     *tagasort-example*
@@ -48,7 +56,7 @@ have to add the following line to your vimrc:
 ============================================================================
 LIMITATIONS                                             *tagasort-limitations*
 
-Note that this plugin doesn't work with tags whose attributes are spread
-across multiple lines.
+This plugin doesn't work with tags whose attributes are spread across multiple
+lines.
 
 ============================================================================
