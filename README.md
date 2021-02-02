@@ -17,7 +17,7 @@ After:
 
 ## Usage
 
-*Tagattsort* works in normal mode. To use it, place your cursor anywhere inside a tag and then hit the spacebar twice. It also works if you place the cursor at the beginning of a line, before any tag; in this case, the target is the left-most tag in that line.
+*Tagasort* works in normal mode. To use it, place your cursor anywhere inside a tag and then hit the spacebar twice. It also works if you place the cursor at the beginning of a line, before any tag; in this case, the target is the left-most tag in that line.
 
 ## Installation
 
@@ -25,7 +25,7 @@ After:
 
 1. Add the following line to your *~/.vimrc*:
 
-        Plug 'jose-villar/vim-tagattsort'
+        Plug 'jose-villar/vim-tagasort'
 
 2. From within vim, run:
 
@@ -36,7 +36,7 @@ After:
 
 You can easily change the key combination that triggers the plugin. For example, if you wanted to change the default mapping to `<Leader>h` , you would have to add the following line to your *vimrc*:
 
-        nmap <unique><Leader>h <Plug>TagattsortNMode
+        nmap <unique><Leader>h <Plug>Tagasort_FormatTag
 
 ## Limitations
 
