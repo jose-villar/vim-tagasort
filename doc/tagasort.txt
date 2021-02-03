@@ -3,7 +3,7 @@
 Author:      José Villar <8.villar.dev at gmail.com>
 Last Change: 2021 Feb 3
 License:     Same terms as Vim itself (see |license|)
-Version:     1.0
+Version:     1.0.1
 
 TABLE OF CONTENTS                                               *tagasort-toc*
 
