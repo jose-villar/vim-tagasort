@@ -69,7 +69,7 @@ function! tagasort#PreFormatTagForSorting()
   " Remove duplicated whitespaces
   .s/\V \s\+/ /ge
   " Mark whitespaces within quotation marks
-  .s/"[^"]*"/\=substitute(submatch(0), ' ', s:auxString, 'g')/ge
+  .s/\v"[^"]*"/\=substitute(submatch(0), ' ', s:auxString, 'g')/ge
   .s/\V>/ >/ge  " > =>  >
   .s/\V\/ >/\/>/ge " / > => />
   .s/\V\/>/ \/>/ge " /> =>  />
