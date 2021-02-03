@@ -40,7 +40,8 @@ You can easily change the key combination that triggers the plugin. For example,
 
 ## Limitations
 
-This plugin doesn't work with tags whose attributes are spread across multiple lines.
+- This plugin doesn't work with tags whose attributes are spread across multiple lines.
+- Nvim has `magic` enabled by default. Make sure to keep it that way, or else the plugin will have serious performance issues.
 
 ## License
 
