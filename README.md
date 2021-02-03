@@ -1,48 +1,55 @@
 # vim-tagasort
 
+## INTRODUCTION
 
-This plugin is a tag attributes sorter. It sorts the attributes of html and jsx tags alphabetically. Also, it enhances their format to improve readability.
+The idea of *Tagasort* is to improve the readability of attributes of *html* and *jsx* tags. To do so, the attributes are sorted alphabetically and formatted to enforce a consisted style.
 
-## Example
+Note that this plugin was designed with Vim's autoload functionality in mind to keep your Vim startup time low.
+
+## EXAMPLE
 
 The following case shows a tag before and after using the plugin.
 
 Before:
 
-        <Box z={ 1   } color="red" onPress={()=>onClick(id )} style={ handleStyle(  ) }  a={ 5 } >
+        <Box z={ 1   } color="red" onPress={()=>onClick(id )} a={5 } >
 
 After:
 
-        <Box a={ 5 } color="red" onPress={ () => onClick( id ) } style={ handleStyle() } z={ 1 }>
+        <Box a={ 5 } color="red" onPress={ () => onClick( id ) } z={ 1 }>
 
-## Usage
+## USAGE
 
-*Tagasort* works in normal mode. To use it, place your cursor anywhere inside a tag and then hit the spacebar twice. It also works if you place the cursor at the beginning of a line, before any tag; in this case, the target is the left-most tag in that line.
+Tagasort works in normal mode. To use it, place your cursor anywhere
+inside a tag and then hit the spacebar twice. If you use it outside a tag, it
+will search for the next tag in the current line and use that as the target.
 
-## Installation
+## INSTALLATION
 
-### Using Plug
+Use your favorite plugin manager.
 
-1. Add the following line to your *~/.vimrc*:
+### USING PLUG
+
+1. Add the following line to your *vimrc*:
 
         Plug 'jose-villar/vim-tagasort'
 
-2. From within vim, run:
+2. From within Vim, run:
 
-        PlugInstall
+        :PlugInstall
 
 
-## Configuration
+## MAPPINGS
 
-You can easily change the key combination that triggers the plugin. For example, if you wanted to change the default mapping to `<Leader>h` , you would have to add the following line to your *vimrc*:
+You can easily change the key combination that triggers the plugin. For example, if you wanted to change the default mapping to `<Leader>0` , you would have to add the following line to your *vimrc*:
 
-        nmap <unique><Leader>h <Plug>Tagasort_FormatTag
+        nmap <unique><Leader>0 <Plug>Tagasort_FormatTag
 
-## Limitations
+## LIMITATIONS
 
 - This plugin doesn't work with tags whose attributes are spread across multiple lines.
-- Nvim has `magic` enabled by default. Make sure to keep it that way, or else the plugin will have serious performance issues.
+- Nvim has `magic` enabled by default. Make sure to keep it this way, or else the plugin will have serious performance issues.
 
-## License
+## LICENSE
 
 Copyright (c) José Villar. Distributed under the same terms as Vim itself. See ``:help license``.

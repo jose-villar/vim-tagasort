@@ -3,7 +3,7 @@
 Author:      José Villar <8.villar.dev at gmail.com>
 Last Change: 2021 Feb 3
 License:     Same terms as Vim itself (see |license|)
-Version:     1.1
+Version:     1.0
 
 TABLE OF CONTENTS                                               *tagasort-toc*
 
@@ -20,16 +20,15 @@ The idea of Tagasort is to improve the readability of attributes of html and
 jsx tags. To do so, the attributes are sorted alphabetically and formatted to
 enforce a consisted style.
 
-Note that this plugin was designed with Vim's autoload functionality
-(available since Vim 7) to keep your vim startup time low.
+Note that this plugin was designed with Vim's autoload functionality in mind to
+keep your Vim startup time low.
 
 ============================================================================
 USAGE                                                         *tagasort-usage*
 
 Tagasort works in normal mode. To use it, place your cursor anywhere
-inside a tag and then hit the spacebar twice. It also works if you place the
-cursor at the beginning of a line, before any tag; in this case, the target
-is the first tag found in that line.
+inside a tag and then hit the spacebar twice. If you use it outside a tag, it
+will search for the next tag in the current line and use that as the target.
 
 ============================================================================
 EXAMPLE                                                     *tagasort-example*
@@ -59,7 +58,7 @@ LIMITATIONS                                             *tagasort-limitations*
 This plugin doesn't work with tags whose attributes are spread across multiple
 lines.
 
-Nvim has `magic` enabled by default. Make sure to keep it that way, or else the
+Nvim has `magic` enabled by default. Make sure to keep it this way, or else the
 plugin will have serious performance issues.
 
 ============================================================================

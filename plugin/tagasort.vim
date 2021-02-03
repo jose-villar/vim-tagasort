@@ -3,7 +3,7 @@
 " Author:      José Villar <8.villar.dev at gmail.com>
 " Last Change: 2021 Feb 3
 " License:     Same terms as Vim itself
-" Version:     1.1
+" Version:     1.0
 " ------------------------------------------------------------------------------
 
 " Exit when app has already been loaded, or "compatible" mode is set, or vim
