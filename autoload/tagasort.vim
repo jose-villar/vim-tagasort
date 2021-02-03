@@ -66,8 +66,10 @@ endfunction
 
 function! tagasort#PreFormatTagForSorting()
   execute 'normal! o'.s:content
-
-  .s/\V \s\+/ /ge " Remove duplicated whitespaces
+  " Remove duplicated whitespaces
+  .s/\V \s\+/ /ge
+  " Mark whitespaces within quotation marks
+  .s/"[^"]*"/\=substitute(submatch(0), ' ', s:auxString, 'g')/ge
   .s/\V>/ >/ge  " > =>  >
   .s/\V\/ >/\/>/ge " / > => />
   .s/\V\/>/ \/>/ge " /> =>  />
@@ -90,7 +92,8 @@ endfunction
 
 function! tagasort#PostFormatTag()
   execute 'normal! o'.s:content
-
+  " Restore withspaces within quotation marks
+  execute '.s/\V' . s:auxString . '/ /ge'
   .s/\V{/{ /ge " { => {\s
   .s/\V}/ }/ge " } => \s}
   .s/\V\s\+,/,/ge "    , => ,
@@ -120,9 +123,12 @@ function! tagasort#CleanUpVars()
   unlet s:originalPosColNumber
   unlet s:currentPos
   unlet s:content
+  unlet s:auxString
 endfunction
 
 function! tagasort#FormatTag() abort
+  "Aux String is used for marking whitespaces within quotation marks
+  let s:auxString = "|$|$|...tagasort...|$|$|"
   let s:colNum = col('.')
   let s:line = getline('.')
   let s:prevPos = getpos('.')
