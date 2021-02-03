@@ -18,7 +18,7 @@ INTRODUCTION                                                  *tagasort-intro*
 
 The idea of Tagasort is to improve the readability of attributes of html and
 jsx tags. To do so, the attributes are sorted alphabetically and formatted to
-enforce a consisted style.
+enforce a consistent style.
 
 Note that this plugin was designed with Vim's autoload functionality in mind to
 keep your Vim startup time low.
