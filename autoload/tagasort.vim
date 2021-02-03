@@ -67,23 +67,23 @@ endfunction
 function! tagasort#PreFormatTagForSorting()
   execute 'normal! o'.s:content
   " Remove duplicated whitespaces
-  .s/\V \s\+/ /ge
+  .sno/ \s\+/ /ge
   " Mark whitespaces within quotation marks
-  .s/\v"[^"]*"/\=substitute(submatch(0), ' ', s:auxString, 'g')/ge
-  .s/\V>/ >/ge  " > =>  >
-  .s/\V\/ >/\/>/ge " / > => />
-  .s/\V\/>/ \/>/ge " /> =>  />
-  .s/\V\s\+=/=/ge "     = => =
-  .s/\V=\s\+/=/ge " =     => =
-  .s/\V{ /{/ge " {  => {
-  .s/\V }/}/ge "  } => }
-  .s/\V\s\+,/,/ge "    , => ,
-  .s/\V,\s+/,/ge " ,    => ,
-  .s/\V= >/=>/ge " = > => =>
-  .s/\V=> /=>/ge " =>  => =>
-  .s/\V =>/=>/ge "  => => =>
-  .s/\V( /(/ge " (\s => (
-  .s/\V )/)/ge " \s) => )
+  .sno/"[^"]*"/\=substitute(submatch(0), ' ', s:auxString, 'g')/ge
+  .sno/>/ >/ge  " > =>  >
+  .sno/\/ >/\/>/ge " / > => />
+  .sno/\/>/ \/>/ge " /> =>  />
+  .sno/\s\+=/=/ge "     = => =
+  .sno/=\s\+/=/ge " =     => =
+  .sno/{ /{/ge " {  => {
+  .sno/ }/}/ge "  } => }
+  .sno/\s\+,/,/ge "    , => ,
+  .sno/,\s+/,/ge " ,    => ,
+  .sno/= >/=>/ge " = > => =>
+  .sno/=> /=>/ge " =>  => =>
+  .sno/ =>/=>/ge "  => => =>
+  .sno/( /(/ge " (\s => (
+  .sno/ )/)/ge " \s) => )
   execute 'normal! 0d$'
   let s:content = @"
   execute 'normal! dd'
@@ -93,19 +93,19 @@ endfunction
 function! tagasort#PostFormatTag()
   execute 'normal! o'.s:content
   " Restore withspaces within quotation marks
-  execute '.s/\V' . s:auxString . '/ /ge'
-  .s/\V{/{ /ge " { => {\s
-  .s/\V}/ }/ge " } => \s}
-  .s/\V\s\+,/,/ge "    , => ,
-  .s/\V,/, /ge " , => ,\s
-  .s/\V=>/ => /ge " => => \s=>\s
-  .s/\V{ {/{{/ge " { { => {{
-  .s/\V} }/}}/ge " } } => }}
-  .s/\V(/( /ge " ( => (\s
-  .s/\V)/ )/ge " ) => \s)
-  .s/\V \s\+/ /ge " Remove duplicated whitespaces
-  .s/\V( )/()/ge " ( ) => ()
-  .s/\V\s>/>/ge " \s> => >
+  execute '.sno/' . s:auxString . '/ /ge'
+  .sno/{/{ /ge " { => {\s
+  .sno/}/ }/ge " } => \s}
+  .sno/\s\+,/,/ge "    , => ,
+  .sno/,/, /ge " , => ,\s
+  .sno/=>/ => /ge " => => \s=>\s
+  .sno/{ {/{{/ge " { { => {{
+  .sno/} }/}}/ge " } } => }}
+  .sno/(/( /ge " ( => (\s
+  .sno/)/ )/ge " ) => \s)
+  .sno/ \s\+/ /ge " Remove duplicated whitespaces
+  .sno/( )/()/ge " ( ) => ()
+  .sno/\s>/>/ge " \s> => >
 
   execute 'normal! 0d$'
   let s:content = @"
