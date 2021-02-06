@@ -1,9 +1,9 @@
 *tagasort.txt* Sort and format the attributes of html and jsx tags.
 
 Author:      José Villar <8.villar.dev at gmail.com>
-Last Change: 2021 Feb 3
+Last Change: 2021 Feb 5
 License:     Same terms as Vim itself (see |license|)
-Version:     1.0.1
+Version:     1.0.2
 
 TABLE OF CONTENTS                                               *tagasort-toc*
 
@@ -14,7 +14,7 @@ TABLE OF CONTENTS                                               *tagasort-toc*
 5. Limitations                                          |tagasort-limitations|
 
 ============================================================================
-INTRODUCTION                                                  *tagasort-intro*
+INTRODUCTION                                                        *tagasort*
 
 The idea of Tagasort is to improve the readability of attributes of html and
 jsx tags. To do so, the attributes are sorted alphabetically and formatted to
@@ -58,7 +58,7 @@ LIMITATIONS                                             *tagasort-limitations*
 This plugin doesn't work with tags whose attributes are spread across multiple
 lines.
 
-Nvim has `magic` enabled by default. Make sure to keep it this way, or else the
+Nvim has 'magic' enabled by default. Make sure to keep it this way, or else the
 plugin will have serious performance issues.
 
 ============================================================================
