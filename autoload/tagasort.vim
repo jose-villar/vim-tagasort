@@ -107,6 +107,7 @@ function! tagasort#PostFormatTag()
   .sno/ \s\+/ /ge " Remove duplicated whitespaces
   .sno/( )/()/ge " ( ) => ()
   .sno/\s>/>/ge " \s> => >
+  .sno/<\/\s/<\//ge " </\s => </
 
   execute 'normal! 0d$'
   let s:content = @"
