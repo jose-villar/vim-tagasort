@@ -1,9 +1,9 @@
 " Tagasort - Sort and format the attributes of html and jsx tags.
 
 " Author:      José Villar <8.villar.dev at gmail.com>
-" Last Change: 2021 Feb 9
+" Last Change: 2021 Feb 17
 " License:     Same terms as Vim itself
-" Version:     1.1
+" Version:     1.2
 " ------------------------------------------------------------------------------
 
 " Exit when app has already been loaded, or "compatible" mode is set, or vim
