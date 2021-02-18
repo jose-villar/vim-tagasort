@@ -22,7 +22,8 @@ endif
 
 noremap <silent> <unique> <script> <Plug>Tagasort_FormatTag
  \ :set lz<CR>:call tagasort#FormatTag()<CR>:set nolz<CR>
+ \ :silent! call repeat#set("\<Plug>Tagasort_FormatTag", v:count)<CR>
 
-"" ------------------------------------------------------------------------------
+" ------------------------------------------------------------------------------
 let &cpo = s:keepcpo
 unlet s:keepcpo
