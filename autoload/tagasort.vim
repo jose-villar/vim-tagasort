@@ -1,10 +1,11 @@
 " Tagasort - autoload file
 
-function! tagasort#CharAt(index, str) abort
-  if a:index < 0 || strchars(a:str) == 0 || a:index >= strchars(a:str)
-    return -1
-  endif
-  return nr2char(strgetchar(a:str, a:index))
+function! tagasort#CharAtCursor() abort
+  return matchstr(getline('.'), '\%' . col('.') . 'c.')
+endfunction
+
+function! tagasort#CharLeftOfCursor() abort
+  return matchstr(getline('.'), '\%' . col('.') - 1 . 'c.')
 endfunction
 
 function! tagasort#CursorDidMove() abort
@@ -18,8 +19,8 @@ endfunction
 function! tagasort#FoundValidClosingTag() abort
   let s:colNum = col('.')
   let s:line = getline('.')
-  let ch = tagasort#CharAt(s:colNum - 1, s:line)
-  let prevCh = tagasort#CharAt(s:colNum - 2, s:line)
+  let ch = tagasort#CharAtCursor()
+  let prevCh = tagasort#CharLeftOfCursor()
   return( ch == '>' && prevCh != '=' )
 endfunction
 
