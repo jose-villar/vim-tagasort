@@ -69,6 +69,8 @@ function! tagasort#PreFormatTagForSorting()
   execute 'normal! o'.s:content
   " Remove duplicated whitespaces
   .sno/ \s\+/ /ge
+  .sno/: /:/ge
+  .sno/ :/:/ge
   " Mark whitespaces within quotation marks
   .sm/"[^"]*"/\=substitute(submatch(0), ' ', s:auxString, 'g')/ge
   .sm/\'[^\']*\'/\=substitute(submatch(0), ' ', s:auxString, 'g')/ge
@@ -106,6 +108,7 @@ function! tagasort#PostFormatTag()
   .sno/} }/}}/ge " } } => }}
   .sno/(/( /ge " ( => (\s
   .sno/)/ )/ge " ) => \s)
+  .sno/:/: /ge
   .sno/ \s\+/ /ge " Remove duplicated whitespaces
   .sno/( )/()/ge " ( ) => ()
   .sno/\s>/>/ge " \s> => >
