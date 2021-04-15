@@ -53,7 +53,7 @@ have to add the following line to your *vimrc*:
 ## LIMITATIONS
 
 - This plugin doesn't work with tags whose attributes are spread across
-multiple lines. 
+multiple lines.
 
 - Nvim has `magic` enabled by default. Make sure to keep it
 this way, or else the plugin will have serious performance issues.
